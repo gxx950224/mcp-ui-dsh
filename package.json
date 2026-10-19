@@ -1,6 +1,6 @@
 {
   "name": "@gxx-labs/mcp-ui-dsh",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "DSH 插件：设置 →「MCP」页签，紧凑可折叠列表 + 表单/JSON 配置 MCP 服务，保存即生效，并展示每个服务已注册的工具。UI 复用 DSH 设计令牌与 primitives。",
   "type": "module",
   "main": "lib/index.js",
@@ -69,5 +69,13 @@
         "react"
       ]
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gxx950224/mcp-ui-dsh.git"
+  },
+  "homepage": "https://github.com/gxx950224/mcp-ui-dsh#readme",
+  "bugs": {
+    "url": "https://github.com/gxx950224/mcp-ui-dsh/issues"
   }
 }
