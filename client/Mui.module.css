@@ -1,0 +1,420 @@
+/*
+ * 「设置 → MCP」页样式。
+ *
+ * 设计目标（本次改版）：
+ *   - **紧凑**：一个服务默认只占一行（名称 + 摘要 + 标签 + 折叠箭头），
+ *     加十个服务也不会变成一条长龙。
+ *   - **可折叠**：展开才显示编辑表单与已生效工具。
+ *   - **分组**：展开后「连接 → 环境/请求头 → 高级 → 已生效工具」分区，
+ *     带小节标题，不再是一堆平铺输入框。
+ *
+ * 硬性约束（scripts/verify-bundle.mjs 会强制校验）：
+ *   - 颜色**只能**用 --dsw-* 设计令牌，不得硬编码 hex / rgb / hsl
+ *     （亮暗主题由令牌自己切换）
+ *   - 类名由 esbuild 的 local-css 加作用域前缀，JS 侧必须 `import css` 才有映射
+ */
+.Mui_page {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 2px 24px;
+  max-width: 940px;
+}
+
+.Mui_heading {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--dsw-alias-label-primary);
+}
+
+.Mui_intro {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.Mui_notice {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.Mui_error {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--dsw-alias-state-error-primary);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-1);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--dsw-alias-state-error-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ---------- 顶部工具条 ---------- */
+.Mui_toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.Mui_grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.Mui_path {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-secondary);
+  overflow-wrap: anywhere;
+}
+
+.Mui_hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-secondary);
+}
+
+/* ---------- 服务列表（紧凑行） ---------- */
+.Mui_list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.Mui_card {
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 10px;
+  background: var(--dsw-alias-bg-layer-1);
+  overflow: hidden;
+}
+
+.Mui_cardOpen {
+  border-color: var(--dsw-alias-border-l2);
+}
+
+/* 折叠态整行可点：箭头 + 名称/摘要 + 标签 + 删除 */
+.Mui_head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+}
+
+.Mui_headOpen {
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.Mui_toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.Mui_caret {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.Mui_headMain {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.Mui_name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--dsw-alias-label-primary);
+  overflow-wrap: anywhere;
+}
+
+.Mui_headAside {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.Mui_badges {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.Mui_badge {
+  font-size: 11px;
+  line-height: 1.4;
+  padding: 1px 6px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 999px;
+  color: var(--dsw-alias-label-secondary);
+  white-space: nowrap;
+}
+
+/* 状态圆点：绿=已生效，黄=生效中/暂无工具，红=有问题 */
+.Mui_dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+.Mui_dotOk {
+  background: var(--dsw-alias-state-success-primary);
+}
+.Mui_dotWait {
+  background: var(--dsw-alias-state-warn-primary);
+}
+.Mui_dotBad {
+  background: var(--dsw-alias-state-error-primary);
+}
+
+/* ---------- 展开后的内容 ---------- */
+.Mui_body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px;
+}
+
+/* 小节：标题 + 细线，替代原来的平铺输入框 */
+.Mui_section {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.Mui_sectionHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.Mui_sectionTitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.Mui_sectionLine {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--dsw-alias-border-l1);
+}
+
+.Mui_field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.Mui_label {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-primary);
+}
+
+.Mui_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.Mui_row > .Mui_field {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* ---------- 键值对编辑器 ---------- */
+.Mui_kv {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.Mui_kvRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.Mui_kvRow > :first-child {
+  flex: 0 1 36%;
+  min-width: 0;
+}
+
+.Mui_kvRow > :nth-child(2) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.Mui_kvDel {
+  flex: 0 0 auto;
+}
+
+/* ---------- 工具清单 ---------- */
+.Mui_tools {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.Mui_toolHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.Mui_toolCount {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.Mui_toolList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding: 8px 10px;
+  list-style: none;
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-base);
+}
+
+.Mui_tool {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.Mui_toolName {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-primary);
+  overflow-wrap: anywhere;
+}
+
+.Mui_toolDesc {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-secondary);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- 空状态 ---------- */
+.Mui_empty {
+  padding: 26px 16px;
+  border: 1px dashed var(--dsw-alias-border-l2);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.Mui_emptyTitle {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dsw-alias-label-primary);
+}
+
+.Mui_emptyText {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.Mui_inlineError {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--dsw-alias-state-error-primary);
+}
+
+/* ---------- JSON 模式 ---------- */
+.Mui_textarea {
+  width: 100%;
+  min-height: 300px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  resize: vertical;
+  tab-size: 2;
+}
+
+.Mui_textarea:focus {
+  outline: 2px solid var(--dsw-alias-brand-primary);
+  outline-offset: -1px;
+}
+
+.Mui_jsonError {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--dsw-alias-state-error-primary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.Mui_footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-top: 2px;
+}

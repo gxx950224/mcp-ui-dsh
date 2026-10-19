@@ -1,0 +1,73 @@
+{
+  "name": "@gxx-labs/mcp-ui-dsh",
+  "version": "0.2.5",
+  "description": "DSH 插件：设置 →「MCP」页签，紧凑可折叠列表 + 表单/JSON 配置 MCP 服务，保存即生效，并展示每个服务已注册的工具。UI 复用 DSH 设计令牌与 primitives。",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./dist/client.js",
+    "./mcp": "./lib/mcp.js",
+    "./paths": "./lib/paths.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/",
+    "dist/",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "test": "node scripts/run-tests.mjs",
+    "verify": "node scripts/verify-bundle.mjs",
+    "check": "node scripts/build-client.mjs && node scripts/verify-bundle.mjs && node scripts/run-tests.mjs"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "mcp",
+    "model-context-protocol",
+    "settings"
+  ],
+  "author": "guoxiaoxi",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@esbuild/win32-x64": "0.25.12",
+    "esbuild": "0.25.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "jsdom": "^30.1.2"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ],
+      "external": [
+        "@deepseek-ai/dsh-client-ui-primitives",
+        "react"
+      ]
+    }
+  }
+}
